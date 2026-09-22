@@ -4,525 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flixty — Write Once. Publish Everywhere.</title>
-  <meta name="description" content="Flixty adalah social media creator studio open-source & self-hosted. AI-assisted content, smart scheduling, live streaming untuk X, LinkedIn, Facebook, Instagram, TikTok, dan YouTube." />
+  <meta name="description" content="Flixty adalah social media creator studio open-source. AI-assisted content, smart scheduling, live streaming untuk X, LinkedIn, Facebook, Instagram, TikTok, dan YouTube." />
   <meta name="theme-color" content="#0a0a0f" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c5cff'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='18' font-weight='bold' text-anchor='middle' fill='%23fff'%3EF%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <style>
-    /* ===== RESET & VARIABEL ===== */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg: #0a0a0f;
-      --bg-alt: #101018;
-      --surface: #14141f;
-      --surface-2: #1c1c2a;
-      --border: #26263a;
-      --text: #e8e8f0;
-      --text-muted: #9a9ab0;
-      --accent: #7c5cff;
-      --accent-2: #5c8aff;
-      --accent-glow: rgba(124, 92, 255, 0.35);
-      --radius: 16px;
-      --radius-sm: 10px;
-      --shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.8);
-      --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font);
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124, 92, 255, 0.15), transparent),
-        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(92, 138, 255, 0.08), transparent);
-      background-attachment: fixed;
-      min-height: 100vh;
-    }
-
-    img { max-width: 100%; display: block; }
-    a { color: inherit; text-decoration: none; }
-    ul, ol { padding-left: 1.5rem; }
-
-    .skip-link {
-      position: absolute; top: -100px; left: 1rem;
-      background: var(--accent); color: #fff;
-      padding: 0.75rem 1.25rem; border-radius: var(--radius-sm);
-      z-index: 9999; transition: top 0.2s; font-weight: 600;
-    }
-    .skip-link:focus { top: 1rem; }
-
-    .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
-
-    /* ===== HEADER ===== */
-    .site-header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10, 10, 15, 0.75);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-
-    .brand {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em;
-      cursor: pointer;
-    }
-    .brand-mark {
-      width: 36px; height: 36px; display: grid; place-items: center;
-      border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff; font-weight: 800; font-size: 1.1rem;
-      box-shadow: 0 0 20px var(--accent-glow);
-    }
-
-    .site-nav { display: flex; align-items: center; gap: 0.25rem; }
-    .site-nav a {
-      padding: 0.5rem 0.9rem; border-radius: var(--radius-sm);
-      font-size: 0.9rem; font-weight: 500; color: var(--text-muted);
-      transition: color 0.2s, background 0.2s;
-      white-space: nowrap; cursor: pointer;
-    }
-    .site-nav a:hover, .site-nav a:focus-visible { color: var(--text); background: var(--surface-2); }
-    .site-nav a.active {
-      color: var(--text); background: var(--surface-2);
-      box-shadow: inset 0 -2px 0 var(--accent);
-    }
-
-    .nav-toggle {
-      display: none; flex-direction: column; justify-content: center;
-      gap: 5px; width: 42px; height: 42px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); cursor: pointer; padding: 0 10px;
-      transition: background 0.2s;
-    }
-    .nav-toggle:hover { background: var(--surface-2); }
-    .nav-toggle span {
-      display: block; height: 2px; width: 100%;
-      background: var(--text); border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-    .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-    .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ===== PAGE VIEWS ===== */
-    .page { display: none; animation: fadeIn 0.35s ease; }
-    .page.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== HERO ===== */
-    .hero { padding: 5rem 0 2rem; position: relative; }
-    .hero-card {
-      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
-      border: 1px solid var(--border);
-      border-radius: calc(var(--radius) * 1.5);
-      padding: 3.5rem 3rem;
-      position: relative; overflow: hidden;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-    .hero-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 80% 20%, rgba(124, 92, 255, 0.18), transparent 55%),
-                  radial-gradient(circle at 20% 80%, rgba(92, 138, 255, 0.12), transparent 50%);
-      pointer-events: none;
-    }
-    .hero-card > * { position: relative; z-index: 1; }
-
-    .badge {
-      display: inline-block; font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--accent); background: rgba(124, 92, 255, 0.12);
-      border: 1px solid rgba(124, 92, 255, 0.3);
-      padding: 0.35rem 0.9rem; border-radius: 999px; margin-bottom: 1.25rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5.5vw, 3.5rem); font-weight: 800;
-      letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem;
-      background: linear-gradient(135deg, #fff 30%, #b8a8ff 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.1rem; color: var(--text-muted);
-      max-width: 640px; margin: 0 auto 2rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-
-    /* ===== TOMBOL ===== */
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 0.5rem; padding: 0.85rem 1.6rem;
-      border-radius: var(--radius-sm); font-weight: 600; font-size: 0.95rem;
-      cursor: pointer; border: 1px solid transparent;
-      transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
-      font-family: inherit;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff; box-shadow: 0 8px 24px -8px var(--accent-glow);
-    }
-    .btn-primary:hover { box-shadow: 0 12px 32px -8px var(--accent-glow); transform: translateY(-2px); }
-    .btn-ghost {
-      background: var(--surface); border-color: var(--border); color: var(--text);
-    }
-    .btn-ghost:hover { background: var(--surface-2); border-color: var(--accent); transform: translateY(-2px); }
-
-    /* ===== SECTION ===== */
-    .section { padding: 4rem 0; }
-    .section-alt {
-      background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    }
-    .section-head { margin-bottom: 2.5rem; max-width: 640px; }
-    .section-head h2 {
-      font-size: clamp(1.6rem, 3.5vw, 2.1rem); font-weight: 700;
-      letter-spacing: -0.02em; margin-bottom: 0.5rem;
-    }
-    .section-head p { color: var(--text-muted); font-size: 1.05rem; }
-
-    /* ===== STATS BAR ===== */
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-top: -1.5rem;
-      position: relative;
-      z-index: 2;
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: var(--shadow);
-    }
-    .stat-item {
-      background: var(--surface);
-      padding: 1.5rem 1rem;
-      text-align: center;
-    }
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text);
-      display: block;
-      background: linear-gradient(135deg, #fff, #b8a8ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .stat-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-top: 0.25rem;
-    }
-
-    /* ===== STEPS ===== */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-    .step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem 1.5rem;
-      position: relative;
-      transition: border-color 0.25s, transform 0.25s;
-    }
-    .step:hover {
-      border-color: rgba(124, 92, 255, 0.5);
-      transform: translateY(-4px);
-    }
-    .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff;
-      font-weight: 800;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 8px 20px -8px var(--accent-glow);
-    }
-    .step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step p { color: var(--text-muted); font-size: 0.92rem; }
-
-    /* ===== ARCH GRID ===== */
-    .arch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .arch-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 1.25rem 1.35rem;
-      transition: border-color 0.25s;
-    }
-    .arch-item:hover { border-color: rgba(124, 92, 255, 0.4); }
-    .arch-item h4 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    .arch-item p { font-size: 0.88rem; color: var(--text-muted); }
-
-    /* ===== GRID & CARD ===== */
-    .grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-    }
-    .card {
-      display: flex; flex-direction: column; gap: 0.6rem;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.75rem 1.5rem;
-      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-      position: relative; overflow: hidden; cursor: pointer;
-    }
-    .card::after {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.12), transparent 60%);
-      opacity: 0; transition: opacity 0.3s; pointer-events: none;
-    }
-    .card:hover {
-      transform: translateY(-4px); border-color: rgba(124, 92, 255, 0.5);
-      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(124, 92, 255, 0.15);
-    }
-    .card:hover::after { opacity: 1; }
-    .card-icon { font-size: 1.8rem; line-height: 1; margin-bottom: 0.25rem; }
-    .card h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
-    .card p { color: var(--text-muted); font-size: 0.92rem; flex-grow: 1; }
-    .card-arrow { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-top: 0.25rem; }
-
-    /* ===== TECH BADGES ===== */
-    .tech-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-    }
-    .tech-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .tech-badge:hover { border-color: var(--accent); color: var(--text); }
-
-    /* ===== FAQ ===== */
-    .faq { max-width: 720px; margin: 0 auto; }
-    .faq-item {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      margin-bottom: 0.75rem;
-      background: var(--surface);
-      overflow: hidden;
-    }
-    .faq-question {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.25rem;
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-align: left;
-      cursor: pointer;
-      font-family: inherit;
-      gap: 1rem;
-    }
-    .faq-question:hover { background: var(--surface-2); }
-    .faq-question::after {
-      content: '+';
-      font-size: 1.25rem;
-      color: var(--accent);
-      transition: transform 0.25s;
-      flex-shrink: 0;
-    }
-    .faq-item.open .faq-question::after { transform: rotate(45deg); }
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-    }
-    .faq-item.open .faq-answer { max-height: 400px; }
-    .faq-answer p {
-      padding: 0 1.25rem 1.25rem;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* ===== CTA SECTION ===== */
-    .cta-section {
-      padding: 5rem 0;
-      text-align: center;
-      background: linear-gradient(160deg, var(--surface), var(--bg-alt));
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-section::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(124, 92, 255, 0.15), transparent 60%);
-      pointer-events: none;
-    }
-    .cta-section > .container { position: relative; z-index: 1; }
-    .cta-section h2 {
-      font-size: clamp(1.8rem, 4vw, 2.5rem);
-      font-weight: 800;
-      margin-bottom: 1rem;
-      letter-spacing: -0.02em;
-    }
-    .cta-section p {
-      color: var(--text-muted);
-      max-width: 560px;
-      margin: 0 auto 2rem;
-    }
-
-    /* ===== CALLOUT ===== */
-    .callout {
-      background: rgba(124, 92, 255, 0.08);
-      border: 1px solid rgba(124, 92, 255, 0.25);
-      border-left: 4px solid var(--accent);
-      border-radius: var(--radius-sm);
-      padding: 1.25rem 1.5rem; margin-top: 1.5rem;
-    }
-    .callout p { color: var(--text); font-size: 0.95rem; }
-
-    /* ===== KONTEN LEGAL ===== */
-    .legal { padding: 3.5rem 0 4rem; }
-    .legal h1 {
-      font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800;
-      letter-spacing: -0.03em; margin-bottom: 0.5rem;
-    }
-    .legal .updated { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2.5rem; display: block; }
-    .legal h2 { font-size: 1.35rem; font-weight: 700; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
-    .legal h3 { font-size: 1.1rem; font-weight: 600; margin: 1.75rem 0 0.5rem; }
-    .legal p { color: var(--text-muted); margin-bottom: 1rem; }
-    .legal ul, .legal ol { color: var(--text-muted); margin-bottom: 1rem; }
-    .legal li { margin-bottom: 0.4rem; }
-    .legal a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
-    .legal a:hover { color: var(--accent-2); }
-    .legal strong { color: var(--text); }
-
-    /* ===== FORM ===== */
-    .form { display: grid; gap: 1.25rem; max-width: 560px; margin-top: 2rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-group label { font-size: 0.9rem; font-weight: 600; color: var(--text); }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%; padding: 0.85rem 1rem;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text);
-      font-family: inherit; font-size: 0.95rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      outline: none; border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
-    }
-    .form-group textarea { min-height: 140px; resize: vertical; }
-    .form-group select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%); background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
-    .checkbox-row { display: flex; align-items: flex-start; gap: 0.6rem; }
-    .checkbox-row input { width: auto; margin-top: 0.35rem; }
-    .form-note { font-size: 0.85rem; color: var(--text-muted); }
-
-    /* ===== FOOTER ===== */
-    .site-footer {
-      border-top: 1px solid var(--border); background: var(--bg-alt);
-      padding: 3rem 0 2rem; margin-top: 2rem;
-    }
-    .footer-inner {
-      display: flex; flex-wrap: wrap; justify-content: space-between;
-      gap: 2.5rem; margin-bottom: 2rem;
-    }
-    .footer-brand { max-width: 340px; }
-    .footer-brand p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem; }
-    .footer-nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
-    .footer-nav a { color: var(--text-muted); font-size: 0.9rem; transition: color 0.2s; cursor: pointer; }
-    .footer-nav a:hover { color: var(--accent); }
-    .footer-bottom { border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 860px) {
-      .nav-toggle { display: flex; }
-      .site-nav {
-        position: absolute; top: 72px; left: 0; right: 0;
-        flex-direction: column; align-items: stretch; gap: 0.25rem;
-        background: rgba(10, 10, 15, 0.98);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border);
-        padding: 1rem 1.5rem 1.5rem;
-        transform: translateY(-10px); opacity: 0; visibility: hidden;
-        transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
-      }
-      .site-nav.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
-      .site-nav a { padding: 0.75rem 1rem; font-size: 1rem; }
-      .hero { padding: 3rem 0 2rem; }
-      .hero-card { padding: 2.5rem 1.75rem; }
-      .section { padding: 3rem 0; }
-      .footer-inner { flex-direction: column; gap: 2rem; }
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-      .steps { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .container { padding: 0 1.1rem; }
-      .hero-card { padding: 2rem 1.35rem; }
-      .hero-actions { flex-direction: column; }
-      .btn { width: 100%; }
-      .card { padding: 1.4rem 1.2rem; }
-      .stats-bar { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Lewati ke konten</a>
 
-  <!-- ===== HEADER ===== -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" data-link="home">
+      <a class="brand" href="index.html">
         <span class="brand-mark" aria-hidden="true">F</span>
         <span>Flixty</span>
       </a>
@@ -532,661 +27,221 @@
       </button>
 
       <nav id="site-nav" class="site-nav" aria-label="Navigasi utama">
-        <a data-link="home">Home</a>
-        <a data-link="privacy">Privacy Policy</a>
-        <a data-link="data-deletion">Data Deletion</a>
-        <a data-link="terms">Terms of Service</a>
-        <a data-link="contact">Contact</a>
+        <a href="index.html" class="active">Home</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="data-deletion.html">Data Deletion</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="contact.html">Contact</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
-
-    <!-- ============ HOME (LANDING PAGE) ============ -->
-    <div class="page active" id="page-home">
-
-      <!-- HERO -->
-      <section class="hero">
-        <div class="container">
-          <div class="hero-card">
-            <span class="badge">Free &amp; Open-Source · MIT Licensed</span>
-            <h1>Write Once.<br />Publish Everywhere.</h1>
-            <p>
-              The free, self-hosted social media creator studio. AI-assisted content,
-              smart scheduling, and live streaming — for X, LinkedIn, Facebook,
-              Instagram, TikTok, and YouTube, from one command center.
-            </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">Deploy Now</a>
-              <a class="btn btn-ghost" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">View on GitHub</a>
-            </div>
-          </div>
-
-          <!-- STATS BAR -->
-          <div class="stats-bar">
-            <div class="stat-item">
-              <span class="stat-value">6</span>
-              <span class="stat-label">Social Platforms</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">$0</span>
-              <span class="stat-label">Monthly Fee</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">AI</span>
-              <span class="stat-label">Content Engine</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">MIT</span>
-              <span class="stat-label">Open Source</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- HOW IT WORKS -->
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>How It Works</h2>
-            <p>Up and running in 3 simple steps.</p>
-          </div>
-
-          <div class="steps">
-            <div class="step">
-              <div class="step-number">01</div>
-              <h3>Create Your Account</h3>
-              <p>Sign up with your email or Google account. No credit card, no trial — free from day one.</p>
-            </div>
-            <div class="step">
-              <div class="step-number">02</div>
-              <h3>Connect Your Platforms</h3>
-              <p>Authenticate your social accounts with OAuth. Flixty handles all platform-specific permissions securely.</p>
-            </div>
-            <div class="step">
-              <div class="step-number">03</div>
-              <h3>Write, Generate, Publish</h3>
-              <p>Compose your post, let AI adapt it per platform, preview the result, then publish now or schedule for later.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SYSTEM ARCHITECTURE -->
-      <section class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Cara Kerja Sistem</h2>
-            <p>Arsitektur dan alur data Flixty dari login hingga publish.</p>
-          </div>
-
-          <div class="arch-grid">
-            <div class="arch-item">
-              <h4>① Backend & Auth</h4>
-              <p>Node.js 18+ dengan Express. Autentikasi via express-session, scrypt hash, dan Google OAuth 2.0.</p>
-            </div>
-            <div class="arch-item">
-              <h4>② Platform Connection</h4>
-              <p>OAuth 2.0 per platform. Token akses disimpan aman untuk X, LinkedIn, Facebook, Instagram, TikTok, dan YouTube.</p>
-            </div>
-            <div class="arch-item">
-              <h4>③ AI Content Engine</h4>
-              <p>Anthropic Claude API menghasilkan variasi konten per platform — sesuai tone, batas karakter, dan audiens.</p>
-            </div>
-            <div class="arch-item">
-              <h4>④ Live Preview</h4>
-              <p>Render UI real-time per platform. Lihat formatting, character count, dan layout media sebelum publish.</p>
-            </div>
-            <div class="arch-item">
-              <h4>⑤ Scheduler (node-cron)</h4>
-              <p>Cron engine mempublikasikan konten otomatis pada waktu yang ditentukan — bahkan saat Anda tidur.</p>
-            </div>
-            <div class="arch-item">
-              <h4>⑥ Multi-Platform Publish</h4>
-              <p>API call simultan ke 6 platform. Satu aksi, enam platform, nol repetisi.</p>
-            </div>
-            <div class="arch-item">
-              <h4>⑦ Storage</h4>
-              <p>JSON flat-file (data/store.json) — ringan, tanpa database eksternal, mudah di-backup.</p>
-            </div>
-            <div class="arch-item">
-              <h4>⑧ Audience Targeting</h4>
-              <p>Konfigurasi age, gender, location, language, interest, industry, dan device per platform.</p>
-            </div>
-          </div>
-
-          <div class="callout">
-            <p>
-              <strong>Self-hosted by design.</strong> Konten, token, dan data audiens Anda
-              tidak pernah menyentuh server Flixty. Anda memiliki setiap byte-nya. Semua kode
-              terbuka di GitHub — audit, fork, dan kontribusi.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- FEATURES -->
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Everything a creator needs</h2>
-            <p>Six platforms. One compose window. AI that writes for each platform's tone, character limits, and audience.</p>
-          </div>
-
-          <div class="grid">
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">🤖</span>
-              <h3>AI Content Engine</h3>
-              <p>Generate platform-optimized posts with Anthropic Claude. Each platform gets content tuned to its tone, character limits, and audience — all from one prompt.</p>
-            </div>
-
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">🚀</span>
-              <h3>Multi-Platform Publisher</h3>
-              <p>Post to X, LinkedIn, Facebook, Instagram, TikTok, and YouTube simultaneously from one compose window. One action — six platforms, zero repetition.</p>
-            </div>
-
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">📅</span>
-              <h3>Smart Scheduler</h3>
-              <p>Schedule posts with a calendar view. A built-in cron engine publishes them automatically at the exact moment you choose — even while you sleep.</p>
-            </div>
-
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">📡</span>
-              <h3>Live Streaming Hub</h3>
-              <p>Create YouTube and Facebook Live broadcasts. Get RTMP server credentials and stream keys for OBS, Streamlabs, or any compatible streaming software.</p>
-            </div>
-
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">👁️</span>
-              <h3>Live Preview</h3>
-              <p>See exactly how your post looks on each platform — formatting, character count, media layout — before you publish. No surprises after the fact.</p>
-            </div>
-
-            <div class="card">
-              <span class="card-icon" aria-hidden="true">🎯</span>
-              <h3>Audience Targeting</h3>
-              <p>Configure age, gender, location, language, interest, industry, and device targeting per platform. Reach the right people — not just any people.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TECH STACK -->
-      <section class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <h2>Tech Stack</h2>
-            <p>Dibangun dengan teknologi yang stabil dan mudah diaudit.</p>
-          </div>
-
-          <div class="tech-badges">
-            <span class="tech-badge">⚙️ Node.js 18+</span>
-            <span class="tech-badge">🚂 Express</span>
-            <span class="tech-badge">🤖 Anthropic Claude</span>
-            <span class="tech-badge">🔐 Google OAuth 2.0</span>
-            <span class="tech-badge">📅 node-cron</span>
-            <span class="tech-badge">📦 multer</span>
-            <span class="tech-badge">🎨 Tailwind CSS</span>
-            <span class="tech-badge">📄 MIT License</span>
-          </div>
-
-          <div class="callout">
-            <p>
-              <strong>No vendor lock-in.</strong> Vanilla JS dan Node.js — tanpa framework
-              frontend yang bisa ditinggalkan. Flixty akan berjalan bertahun-tahun tanpa
-              forced migrations.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Common questions, direct answers</h2>
-            <p>Everything you need to know before you start.</p>
-          </div>
-
-          <div class="faq">
-            <div class="faq-item">
-              <button class="faq-question" type="button">Apa itu Flixty?</button>
-              <div class="faq-answer">
-                <p>Flixty adalah free, open-source social media creator studio yang memungkinkan Anda menulis sekali dan mempublikasikan ke X (Twitter), LinkedIn, Facebook, Instagram, TikTok, dan YouTube secara simultan. Dilengkapi AI content generation (Anthropic Claude), penjadwalan dengan calendar view, live streaming ke YouTube &amp; Facebook, dan real-time platform preview.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" type="button">Apakah benar-benar gratis?</button>
-              <div class="faq-answer">
-                <p>Ya. Flixty berlisensi MIT dan gratis digunakan selamanya. Tidak ada trial period, paywall, atau "freemium" trap. Anda hanya membayar hosting server Anda sendiri. Setiap fitur gratis, setiap platform termasuk, tanpa upsell.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" type="button">Apakah saya harus self-host?</button>
-              <div class="faq-answer">
-                <p>Ya, Flixty dirancang sebagai self-hosted. Anda deploy di server sendiri, sehingga konten, token, dan data audiens Anda tidak pernah menyentuh server kami. Anda memiliki setiap byte-nya. Deploy dapat dilakukan dalam waktu kurang dari 15 menit.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" type="button">Platform apa saja yang didukung?</button>
-              <div class="faq-answer">
-                <p>Enam platform: X (Twitter), LinkedIn, Facebook, Instagram, TikTok, dan YouTube. Masing-masing terhubung via OAuth 2.0 dan dapat dikonfigurasi secara terpisah — Anda hanya perlu mengatur platform yang ingin digunakan.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" type="button">Bagaimana AI-nya bekerja?</button>
-              <div class="faq-answer">
-                <p>Flixty menggunakan Anthropic Claude API untuk menghasilkan dan menulis ulang konten per platform. AI menyesuaikan tone, batas karakter, dan audiens masing-masing platform dari satu prompt. Anda tetap bisa mengedit hasilnya sebelum publish.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" type="button">Apakah data saya aman?</button>
-              <div class="faq-answer">
-                <p>Karena self-hosted, data Anda sepenuhnya ada di server Anda sendiri. Token akses platform disimpan aman, sesi menggunakan scrypt hash, dan semua kode terbuka di GitHub untuk diaudit — tidak ada black box atau algoritma proprietary.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA -->
-      <section class="cta-section">
-        <div class="container">
-          <h2>Ready to take control of your social media?</h2>
-          <p>Deploy Flixty on your own server in minutes. Gratis, open-source, tanpa lock-in.</p>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <span class="badge">Free &amp; Open-Source · MIT Licensed</span>
+          <h1>Write Once.<br />Publish Everywhere.</h1>
+          <p>
+            The free, self-hosted social media creator studio. AI-assisted content,
+            smart scheduling, and live streaming — for X, LinkedIn, Facebook,
+            Instagram, TikTok, and YouTube, from one command center.
+          </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">Get Started on GitHub</a>
-            <a class="btn btn-ghost" data-link="contact">Hubungi Kami</a>
+            <a class="btn btn-primary" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">Deploy Now</a>
+            <a class="btn btn-ghost" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">View on GitHub</a>
           </div>
         </div>
-      </section>
 
-    </div>
-
-    <!-- ============ PRIVACY POLICY ============ -->
-    <div class="page" id="page-privacy">
-      <div class="legal">
-        <div class="container">
-          <h1>Privacy Policy</h1>
-          <span class="updated">Terakhir diperbarui: 1 Januari 2025</span>
-
-          <p>
-            Flixty ("kami", "milik kami") mengoperasikan layanan pengelolaan konten media sosial
-            yang dapat diakses melalui situs web dan aplikasi mobile. Kebijakan Privasi ini
-            menjelaskan bagaimana kami mengumpulkan, menggunakan, menyimpan, dan melindungi
-            informasi Anda, termasuk data yang diperoleh melalui integrasi dengan platform Meta
-            (Facebook dan Instagram).
-          </p>
-
-          <h2>1. Informasi yang Kami Kumpulkan</h2>
-          <p>Kami dapat mengumpulkan informasi berikut:</p>
-          <ul>
-            <li><strong>Informasi akun:</strong> nama, alamat email, dan kata sandi yang di-hash.</li>
-            <li><strong>Data platform Meta:</strong> ID pengguna Facebook/Instagram, nama tampilan, foto profil, dan izin yang Anda berikan (misalnya mengelola halaman, mengunggah konten).</li>
-            <li><strong>Data konten:</strong> konten yang Anda unggah, jadwalkan, atau kelola melalui Flixty.</li>
-            <li><strong>Data teknis:</strong> alamat IP, jenis perangkat, browser, dan log aktivitas untuk keamanan dan analitik.</li>
-          </ul>
-
-          <h2>2. Bagaimana Kami Menggunakan Informasi</h2>
-          <p>Informasi yang kami kumpulkan digunakan untuk:</p>
-          <ul>
-            <li>Menyediakan, mengoperasikan, dan memelihara layanan Flixty.</li>
-            <li>Menghubungkan akun media sosial Anda dan menjalankan fitur yang Anda minta.</li>
-            <li>Meningkatkan kualitas layanan, keamanan, dan pengalaman pengguna.</li>
-            <li>Mengirim pemberitahuan terkait layanan, pembaruan, atau dukungan.</li>
-            <li>Mematuhi kewajiban hukum yang berlaku.</li>
-          </ul>
-
-          <h2>3. Berbagi Data dengan Pihak Ketiga</h2>
-          <p>Kami tidak menjual data pribadi Anda. Kami hanya membagikan data kepada:</p>
-          <ul>
-            <li><strong>Platform Meta:</strong> untuk menjalankan integrasi yang Anda izinkan.</li>
-            <li><strong>Penyedia layanan:</strong> pihak ketiga yang membantu operasional (hosting, analitik) dengan perjanjian kerahasiaan.</li>
-            <li><strong>Otoritas hukum:</strong> jika diwajibkan oleh hukum atau untuk melindungi hak dan keamanan.</li>
-          </ul>
-
-          <h2>4. Penyimpanan dan Keamanan Data</h2>
-          <p>
-            Kami menyimpan data Anda selama akun Anda aktif atau selama diperlukan untuk
-            menyediakan layanan. Kami menerapkan langkah keamanan teknis dan organisasi yang
-            wajar, termasuk enkripsi, kontrol akses, dan pemantauan, untuk melindungi data Anda.
-          </p>
-
-          <h2>5. Hak Anda</h2>
-          <p>Anda memiliki hak untuk:</p>
-          <ul>
-            <li>Mengakses dan memperbarui informasi pribadi Anda.</li>
-            <li>Meminta penghapusan data Anda (lihat <a data-link="data-deletion">Data Deletion</a>).</li>
-            <li>Menarik izin integrasi kapan saja melalui pengaturan platform Meta.</li>
-            <li>Mengajukan keluhan kepada otoritas perlindungan data yang berwenang.</li>
-          </ul>
-
-          <h2>6. Cookie dan Teknologi Serupa</h2>
-          <p>
-            Kami menggunakan cookie dan teknologi serupa untuk menjaga sesi login, mengingat
-            preferensi, dan menganalisis penggunaan layanan. Anda dapat mengatur cookie melalui
-            pengaturan browser Anda.
-          </p>
-
-          <h2>7. Perubahan Kebijakan</h2>
-          <p>
-            Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Perubahan akan
-            diumumkan di halaman ini dengan tanggal "Terakhir diperbarui" yang baru.
-          </p>
-
-          <h2>8. Hubungi Kami</h2>
-          <p>
-            Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami
-            melalui halaman <a data-link="contact">Contact</a> atau email ke
-            <a href="mailto:privacy@flixty.nexusai.run">privacy@flixty.nexusai.run</a>.
-          </p>
+        <div class="stats-bar">
+          <div class="stat-item"><span class="stat-value">6</span><span class="stat-label">Social Platforms</span></div>
+          <div class="stat-item"><span class="stat-value">$0</span><span class="stat-label">Monthly Fee</span></div>
+          <div class="stat-item"><span class="stat-value">AI</span><span class="stat-label">Content Engine</span></div>
+          <div class="stat-item"><span class="stat-value">MIT</span><span class="stat-label">Open Source</span></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ============ DATA DELETION ============ -->
-    <div class="page" id="page-data-deletion">
-      <div class="legal">
-        <div class="container">
-          <h1>Data Deletion</h1>
-          <span class="updated">Terakhir diperbarui: 1 Januari 2025</span>
-
-          <p>
-            Flixty menghormati hak Anda untuk mengontrol data pribadi Anda. Halaman ini
-            menjelaskan cara meminta penghapusan data yang terkait dengan akun Flixty Anda,
-            termasuk data yang diperoleh melalui integrasi dengan platform Meta (Facebook
-            dan Instagram).
-          </p>
-
-          <h2>1. Data yang Dapat Dihapus</h2>
-          <p>Permintaan penghapusan dapat mencakup:</p>
-          <ul>
-            <li>Informasi akun Flixty (nama, email, kata sandi).</li>
-            <li>Data profil dan konten yang tersimpan di server Flixty.</li>
-            <li>Token akses dan data integrasi Meta yang terkait dengan akun Anda.</li>
-            <li>Log aktivitas dan data analitik yang dapat diidentifikasi.</li>
-          </ul>
-
-          <h2>2. Cara Mengajukan Penghapusan Data</h2>
-          <p>Anda dapat mengajukan permintaan melalui salah satu cara berikut:</p>
-
-          <h3>Opsi A — Melalui Formulir di Bawah Ini</h3>
-          <p>
-            Isi formulir di bawah ini dengan alamat email yang terdaftar di Flixty. Kami akan
-            memproses permintaan Anda dalam waktu maksimal 30 hari.
-          </p>
-
-          <form class="form" id="deletion-form">
-            <div class="form-group">
-              <label for="del-email">Alamat Email Terdaftar *</label>
-              <input type="email" id="del-email" name="email" placeholder="nama@email.com" required />
-            </div>
-
-            <div class="form-group">
-              <label for="del-reason">Alasan (opsional)</label>
-              <textarea id="del-reason" name="reason" placeholder="Beritahu kami alasan penghapusan data Anda..."></textarea>
-            </div>
-
-            <div class="form-group checkbox-row">
-              <input type="checkbox" id="del-confirm" required />
-              <label for="del-confirm" style="font-weight:500;">Saya memahami bahwa penghapusan data bersifat permanen dan tidak dapat dibatalkan.</label>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Kirim Permintaan Penghapusan</button>
-            <p class="form-note">* Wajib diisi. Kami hanya akan memproses permintaan dari pemilik akun yang sah.</p>
-          </form>
-
-          <h3>Opsi B — Melalui Email</h3>
-          <p>
-            Kirim email ke
-            <a href="mailto:privacy@flixty.nexusai.run">privacy@flixty.nexusai.run</a>
-            dengan subjek <strong>"Permintaan Penghapusan Data"</strong> dan sertakan alamat
-            email yang terdaftar.
-          </p>
-
-          <h3>Opsi C — Melalui Pengaturan Meta</h3>
-          <p>
-            Jika Anda hanya ingin mencabut akses Flixty ke akun Meta Anda, Anda dapat melakukannya
-            melalui pengaturan Facebook/Instagram: <em>Settings → Apps and Websites → Flixty →
-            Remove</em>. Tindakan ini akan menghentikan akses Flixty ke data Meta Anda, namun
-            data yang sudah tersimpan di server Flixty tetap dapat dihapus melalui Opsi A atau B.
-          </p>
-
-          <h2>3. Waktu Proses</h2>
-          <p>
-            Kami akan mengonfirmasi penerimaan permintaan Anda dalam waktu 7 hari kerja dan
-            menyelesaikan proses penghapusan dalam waktu maksimal 30 hari, kecuali ada kewajiban
-            hukum yang mengharuskan kami menyimpan data tertentu untuk periode yang lebih lama.
-          </p>
-
-          <h2>4. Data yang Mungkin Tetap Disimpan</h2>
-          <p>
-            Kami dapat menyimpan data tertentu untuk memenuhi kewajiban hukum, menyelesaikan
-            sengketa, atau menegakkan perjanjian. Data tersebut akan disimpan hanya selama
-            diperlukan dan tidak akan digunakan untuk tujuan lain.
-          </p>
-
-          <h2>5. Hubungi Kami</h2>
-          <p>
-            Jika Anda memiliki pertanyaan tentang proses penghapusan data, hubungi kami melalui
-            halaman <a data-link="contact">Contact</a> atau email ke
-            <a href="mailto:privacy@flixty.nexusai.run">privacy@flixty.nexusai.run</a>.
-          </p>
+    <!-- HOW IT WORKS -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>How It Works</h2>
+          <p>Up and running in 3 simple steps.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">01</div>
+            <h3>Create Your Account</h3>
+            <p>Sign up with your email or Google account. No credit card, no trial — free from day one.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">02</div>
+            <h3>Connect Your Platforms</h3>
+            <p>Authenticate your social accounts with OAuth. Flixty handles all platform-specific permissions securely.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">03</div>
+            <h3>Write, Generate, Publish</h3>
+            <p>Compose your post, let AI adapt it per platform, preview the result, then publish now or schedule for later.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ============ TERMS OF SERVICE ============ -->
-    <div class="page" id="page-terms">
-      <div class="legal">
-        <div class="container">
-          <h1>Terms of Service</h1>
-          <span class="updated">Terakhir diperbarui: 1 Januari 2025</span>
-
-          <p>
-            Selamat datang di Flixty. Syarat dan Ketentuan ini ("Syarat") mengatur penggunaan
-            Anda atas layanan, situs web, dan aplikasi Flixty ("Layanan"). Dengan mengakses
-            atau menggunakan Layanan, Anda setuju untuk terikat oleh Syarat ini.
-          </p>
-
-          <h2>1. Penerimaan Syarat</h2>
-          <p>
-            Dengan membuat akun atau menggunakan Layanan, Anda menyatakan bahwa Anda telah
-            membaca, memahami, dan menyetujui Syarat ini. Jika Anda tidak setuju, Anda tidak
-            boleh menggunakan Layanan.
-          </p>
-
-          <h2>2. Kelayakan</h2>
-          <p>
-            Anda harus berusia minimal 13 tahun (atau usia minimum yang diizinkan oleh hukum
-            di yurisdiksi Anda) untuk menggunakan Layanan. Jika Anda menggunakan Layanan atas
-            nama organisasi, Anda menyatakan bahwa Anda berwenang untuk mengikat organisasi
-            tersebut.
-          </p>
-
-          <h2>3. Akun dan Keamanan</h2>
-          <ul>
-            <li>Anda bertanggung jawab untuk menjaga kerahasiaan kredensial akun Anda.</li>
-            <li>Anda setuju untuk memberikan informasi yang akurat dan terkini.</li>
-            <li>Anda harus segera memberi tahu kami jika terjadi akses tidak sah ke akun Anda.</li>
-            <li>Kami berhak menangguhkan atau menutup akun yang melanggar Syarat ini.</li>
-          </ul>
-
-          <h2>4. Penggunaan Layanan</h2>
-          <p>Anda setuju untuk tidak:</p>
-          <ul>
-            <li>Menggunakan Layanan untuk tujuan ilegal atau melanggar hukum.</li>
-            <li>Mengunggah konten yang melanggar hak cipta, merek dagang, atau hak pihak ketiga.</li>
-            <li>Mengganggu atau merusak integritas atau kinerja Layanan.</li>
-            <li>Mengakses data pengguna lain tanpa izin.</li>
-            <li>Menggunakan bot, scraper, atau alat otomatis tanpa persetujuan tertulis kami.</li>
-          </ul>
-
-          <h2>5. Integrasi Pihak Ketiga</h2>
-          <p>
-            Layanan dapat terintegrasi dengan platform pihak ketiga, termasuk Meta (Facebook
-            dan Instagram). Penggunaan integrasi tersebut tunduk pada syarat dan kebijakan
-            platform terkait. Anda bertanggung jawab untuk mematuhi semua ketentuan platform
-            pihak ketiga.
-          </p>
-
-          <h2>6. Hak Kekayaan Intelektual</h2>
-          <p>
-            Semua hak, judul, dan kepentingan atas Layanan, termasuk perangkat lunak, desain,
-            logo, dan konten kami, adalah milik Flixty atau pemberi lisensinya. Anda tidak
-            diperbolehkan menyalin, memodifikasi, atau mendistribusikan bagian mana pun dari
-            Layanan tanpa izin tertulis dari kami.
-          </p>
-
-          <h2>7. Konten Pengguna</h2>
-          <p>
-            Anda mempertahankan kepemilikan atas konten yang Anda unggah. Dengan mengunggah
-            konten, Anda memberikan kami lisensi non-eksklusif, global, dan bebas royalti untuk
-            menggunakan, menyimpan, dan menampilkan konten tersebut sejauh diperlukan untuk
-            menyediakan Layanan.
-          </p>
-
-          <h2>8. Penafian Jaminan</h2>
-          <p>
-            Layanan disediakan "sebagaimana adanya" dan "sebagaimana tersedia" tanpa jaminan
-            apa pun, baik tersurat maupun tersirat. Kami tidak menjamin bahwa Layanan akan
-            bebas dari kesalahan, aman, atau tersedia tanpa gangguan.
-          </p>
-
-          <h2>9. Batasan Tanggung Jawab</h2>
-          <p>
-            Sejauh diizinkan oleh hukum, Flixty tidak bertanggung jawab atas kerugian tidak
-            langsung, insidental, khusus, konsekuensial, atau hukuman yang timbul dari
-            penggunaan atau ketidakmampuan menggunakan Layanan.
-          </p>
-
-          <h2>10. Perubahan Syarat</h2>
-          <p>
-            Kami dapat memperbarui Syarat ini dari waktu ke waktu. Perubahan akan berlaku
-            efektif setelah dipublikasikan di halaman ini. Penggunaan Layanan yang
-            berkelanjutan setelah perubahan berarti Anda menyetujui Syarat yang diperbarui.
-          </p>
-
-          <h2>11. Hukum yang Berlaku</h2>
-          <p>
-            Syarat ini diatur oleh hukum yang berlaku di yurisdiksi tempat Flixty beroperasi,
-            tanpa memperhatikan prinsip konflik hukum.
-          </p>
-
-          <h2>12. Hubungi Kami</h2>
-          <p>
-            Jika Anda memiliki pertanyaan tentang Syarat ini, hubungi kami melalui halaman
-            <a data-link="contact">Contact</a> atau email ke
-            <a href="mailto:legal@flixty.nexusai.run">legal@flixty.nexusai.run</a>.
-          </p>
+    <!-- SYSTEM ARCHITECTURE -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Cara Kerja Sistem</h2>
+          <p>Arsitektur dan alur data Flixty dari login hingga publish.</p>
+        </div>
+        <div class="arch-grid">
+          <div class="arch-item"><h4>① Backend & Auth</h4><p>Node.js 18+ dengan Express. Autentikasi via express-session, scrypt hash, dan Google OAuth 2.0.</p></div>
+          <div class="arch-item"><h4>② Platform Connection</h4><p>OAuth 2.0 per platform. Token akses disimpan aman untuk X, LinkedIn, Facebook, Instagram, TikTok, dan YouTube.</p></div>
+          <div class="arch-item"><h4>③ AI Content Engine</h4><p>Anthropic Claude API menghasilkan variasi konten per platform — sesuai tone, batas karakter, dan audiens.</p></div>
+          <div class="arch-item"><h4>④ Live Preview</h4><p>Render UI real-time per platform. Lihat formatting, character count, dan layout media sebelum publish.</p></div>
+          <div class="arch-item"><h4>⑤ Scheduler (node-cron)</h4><p>Cron engine mempublikasikan konten otomatis pada waktu yang ditentukan — bahkan saat Anda tidur.</p></div>
+          <div class="arch-item"><h4>⑥ Multi-Platform Publish</h4><p>API call simultan ke 6 platform. Satu aksi, enam platform, nol repetisi.</p></div>
+          <div class="arch-item"><h4>⑦ Storage</h4><p>JSON flat-file (data/store.json) — ringan, tanpa database eksternal, mudah di-backup.</p></div>
+          <div class="arch-item"><h4>⑧ Audience Targeting</h4><p>Konfigurasi age, gender, location, language, interest, industry, dan device per platform.</p></div>
+        </div>
+        <div class="callout">
+          <p><strong>Self-hosted by design.</strong> Konten, token, dan data audiens Anda tidak pernah menyentuh server Flixty. Anda memiliki setiap byte-nya.</p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ============ CONTACT ============ -->
-    <div class="page" id="page-contact">
-      <div class="legal">
-        <div class="container">
-          <h1>Contact</h1>
-          <span class="updated">Kami siap membantu Anda</span>
-
-          <p>
-            Punya pertanyaan tentang Flixty, butuh dukungan teknis, atau ingin mengajukan
-            permintaan terkait privasi dan hukum? Tim kami akan merespons dalam waktu
-            1–2 hari kerja.
-          </p>
-
-          <h2>Informasi Kontak</h2>
-          <ul>
-            <li><strong>Email umum:</strong> <a href="mailto:hello@flixty.nexusai.run">hello@flixty.nexusai.run</a></li>
-            <li><strong>Privasi &amp; data:</strong> <a href="mailto:privacy@flixty.nexusai.run">privacy@flixty.nexusai.run</a></li>
-            <li><strong>Hukum:</strong> <a href="mailto:legal@flixty.nexusai.run">legal@flixty.nexusai.run</a></li>
-            <li><strong>Dukungan:</strong> <a href="mailto:support@flixty.nexusai.run">support@flixty.nexusai.run</a></li>
-          </ul>
-
-          <h2>Kirim Pesan</h2>
-          <p>Isi formulir di bawah ini dan kami akan segera menghubungi Anda.</p>
-
-          <form class="form" id="contact-form">
-            <div class="form-group">
-              <label for="name">Nama Lengkap *</label>
-              <input type="text" id="name" name="name" placeholder="Nama Anda" required />
-            </div>
-
-            <div class="form-group">
-              <label for="email">Alamat Email *</label>
-              <input type="email" id="email" name="email" placeholder="nama@email.com" required />
-            </div>
-
-            <div class="form-group">
-              <label for="subject">Subjek *</label>
-              <select id="subject" name="subject" required>
-                <option value="" disabled selected>Pilih subjek...</option>
-                <option value="umum">Pertanyaan Umum</option>
-                <option value="dukungan">Dukungan Teknis</option>
-                <option value="privasi">Privasi &amp; Data</option>
-                <option value="hukum">Permintaan Hukum</option>
-                <option value="lainnya">Lainnya</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="message">Pesan *</label>
-              <textarea id="message" name="message" placeholder="Tulis pesan Anda di sini..." required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Kirim Pesan</button>
-            <p class="form-note">* Wajib diisi. Kami tidak akan membagikan informasi Anda kepada pihak ketiga.</p>
-          </form>
-
-          <h2>Jam Operasional</h2>
-          <p>
-            Senin – Jumat: 09.00 – 18.00 WIB<br />
-            Sabtu – Minggu &amp; hari libur nasional: Tutup
-          </p>
-
-          <h2>Media Sosial</h2>
-          <p>Ikuti kami untuk pembaruan dan pengumuman terbaru:</p>
-          <ul>
-            <li>Twitter/X: <a href="#" target="_blank" rel="noopener">@flixty</a></li>
-            <li>Instagram: <a href="#" target="_blank" rel="noopener">@flixty.app</a></li>
-            <li>LinkedIn: <a href="#" target="_blank" rel="noopener">Flixty</a></li>
-          </ul>
+    <!-- FEATURES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Everything a creator needs</h2>
+          <p>Six platforms. One compose window. AI that writes for each platform's tone, character limits, and audience.</p>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">🤖</span>
+            <h3>AI Content Engine</h3>
+            <p>Generate platform-optimized posts with Anthropic Claude. Each platform gets content tuned to its tone, character limits, and audience — all from one prompt.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">🚀</span>
+            <h3>Multi-Platform Publisher</h3>
+            <p>Post to X, LinkedIn, Facebook, Instagram, TikTok, and YouTube simultaneously from one compose window. One action — six platforms, zero repetition.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">📅</span>
+            <h3>Smart Scheduler</h3>
+            <p>Schedule posts with a calendar view. A built-in cron engine publishes them automatically at the exact moment you choose — even while you sleep.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">📡</span>
+            <h3>Live Streaming Hub</h3>
+            <p>Create YouTube and Facebook Live broadcasts. Get RTMP server credentials and stream keys for OBS, Streamlabs, or any compatible streaming software.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">👁️</span>
+            <h3>Live Preview</h3>
+            <p>See exactly how your post looks on each platform — formatting, character count, media layout — before you publish. No surprises after the fact.</p>
+          </div>
+          <div class="card">
+            <span class="card-icon" aria-hidden="true">🎯</span>
+            <h3>Audience Targeting</h3>
+            <p>Configure age, gender, location, language, interest, industry, and device targeting per platform. Reach the right people — not just any people.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
+    <!-- TECH STACK -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Tech Stack</h2>
+          <p>Dibangun dengan teknologi yang stabil dan mudah diaudit.</p>
+        </div>
+        <div class="tech-badges">
+          <span class="tech-badge">⚙️ Node.js 18+</span>
+          <span class="tech-badge">🚂 Express</span>
+          <span class="tech-badge">🤖 Anthropic Claude</span>
+          <span class="tech-badge">🔐 Google OAuth 2.0</span>
+          <span class="tech-badge">📅 node-cron</span>
+          <span class="tech-badge">📦 multer</span>
+          <span class="tech-badge">🎨 Tailwind CSS</span>
+          <span class="tech-badge">📄 MIT License</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Common questions, direct answers</h2>
+          <p>Everything you need to know before you start.</p>
+        </div>
+        <div class="faq">
+          <div class="faq-item">
+            <button class="faq-question" type="button">Apa itu Flixty?</button>
+            <div class="faq-answer"><p>Flixty adalah free, open-source social media creator studio yang memungkinkan Anda menulis sekali dan mempublikasikan ke X (Twitter), LinkedIn, Facebook, Instagram, TikTok, dan YouTube secara simultan. Dilengkapi AI content generation (Anthropic Claude), penjadwalan dengan calendar view, live streaming ke YouTube &amp; Facebook, dan real-time platform preview.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">Apakah benar-benar gratis?</button>
+            <div class="faq-answer"><p>Ya. Flixty berlisensi MIT dan gratis digunakan selamanya. Tidak ada trial period, paywall, atau "freemium" trap. Anda hanya membayar hosting server Anda sendiri. Setiap fitur gratis, setiap platform termasuk, tanpa upsell.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">Apakah saya harus self-host?</button>
+            <div class="faq-answer"><p>Ya, Flixty dirancang sebagai self-hosted. Anda deploy di server sendiri, sehingga konten, token, dan data audiens Anda tidak pernah menyentuh server kami. Deploy dapat dilakukan dalam waktu kurang dari 15 menit.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">Platform apa saja yang didukung?</button>
+            <div class="faq-answer"><p>Enam platform: X (Twitter), LinkedIn, Facebook, Instagram, TikTok, dan YouTube. Masing-masing terhubung via OAuth 2.0 dan dapat dikonfigurasi secara terpisah.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">Bagaimana AI-nya bekerja?</button>
+            <div class="faq-answer"><p>Flixty menggunakan Anthropic Claude API untuk menghasilkan dan menulis ulang konten per platform. AI menyesuaikan tone, batas karakter, dan audiens masing-masing platform dari satu prompt. Anda tetap bisa mengedit hasilnya sebelum publish.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">Apakah data saya aman?</button>
+            <div class="faq-answer"><p>Karena self-hosted, data Anda sepenuhnya ada di server Anda sendiri. Token akses platform disimpan aman, sesi menggunakan scrypt hash, dan semua kode terbuka di GitHub untuk diaudit.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to take control of your social media?</h2>
+        <p>Deploy Flixty on your own server in minutes. Gratis, open-source, tanpa lock-in.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/nexusrun/flixty" target="_blank" rel="noopener">Get Started on GitHub</a>
+          <a class="btn btn-ghost" href="contact.html">Hubungi Kami</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand">
-          <a class="brand" data-link="home">
+          <a class="brand" href="index.html">
             <span class="brand-mark" aria-hidden="true">F</span>
             <span>Flixty</span>
           </a>
           <p>Open-source social media creator studio. Write once, publish to X, LinkedIn, Facebook, Instagram, TikTok, and YouTube.</p>
         </div>
-
         <nav class="footer-nav" aria-label="Navigasi footer">
-          <a data-link="home">Home</a>
-          <a data-link="privacy">Privacy Policy</a>
-          <a data-link="data-deletion">Data Deletion</a>
-          <a data-link="terms">Terms of Service</a>
-          <a data-link="contact">Contact</a>
+          <a href="index.html">Home</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="data-deletion.html">Data Deletion</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="contact.html">Contact</a>
         </nav>
       </div>
-
       <div class="footer-bottom">
         © <span id="year">2025</span> Flixty. MIT Licensed. Seluruh hak cipta dilindungi.
       </div>
@@ -1195,108 +250,22 @@
 
   <script>
     (function () {
-      'use strict';
-
-      var PAGE_TITLES = {
-        'home': 'Flixty — Write Once. Publish Everywhere.',
-        'privacy': 'Privacy Policy — Flixty',
-        'data-deletion': 'Data Deletion — Flixty',
-        'terms': 'Terms of Service — Flixty',
-        'contact': 'Contact — Flixty'
-      };
-
-      var VALID_PAGES = Object.keys(PAGE_TITLES);
-
-      function showPage(pageId, updateHash) {
-        if (VALID_PAGES.indexOf(pageId) === -1) pageId = 'home';
-
-        document.querySelectorAll('.page').forEach(function (el) {
-          el.classList.remove('active');
-        });
-
-        var target = document.getElementById('page-' + pageId);
-        if (target) target.classList.add('active');
-
-        document.querySelectorAll('.site-nav a').forEach(function (a) {
-          a.classList.toggle('active', a.getAttribute('data-link') === pageId);
-        });
-
-        document.title = PAGE_TITLES[pageId] || PAGE_TITLES.home;
-
-        if (updateHash !== false) {
-          if (history.pushState) {
-            history.pushState(null, '', '#' + pageId);
-          } else {
-            window.location.hash = pageId;
-          }
-        }
-
-        window.scrollTo({ top: 0, behavior: 'auto' });
-
-        var nav = document.getElementById('site-nav');
-        var btn = document.querySelector('.nav-toggle');
-        if (nav && nav.classList.contains('is-open')) {
-          nav.classList.remove('is-open');
-          btn.setAttribute('aria-expanded', 'false');
-        }
-      }
-
-      document.addEventListener('click', function (e) {
-        var link = e.target.closest('[data-link]');
-        if (!link) return;
-        e.preventDefault();
-        var pageId = link.getAttribute('data-link');
-        showPage(pageId);
-      });
-
       var btn = document.querySelector('.nav-toggle');
       var nav = document.getElementById('site-nav');
       if (btn && nav) {
         btn.addEventListener('click', function () {
           var open = nav.classList.toggle('is-open');
           btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-          btn.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
         });
       }
-
-      // FAQ accordion
       document.querySelectorAll('.faq-question').forEach(function (q) {
         q.addEventListener('click', function () {
           var item = q.parentElement;
           var isOpen = item.classList.contains('open');
-          // Tutup semua
           document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open'); });
-          // Buka yang diklik jika sebelumnya tertutup
           if (!isOpen) item.classList.add('open');
         });
       });
-
-      var deletionForm = document.getElementById('deletion-form');
-      if (deletionForm) {
-        deletionForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          alert('Permintaan penghapusan data Anda telah dikirim. Kami akan menghubungi Anda melalui email dalam 7 hari kerja.');
-          deletionForm.reset();
-        });
-      }
-
-      var contactForm = document.getElementById('contact-form');
-      if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          alert('Pesan Anda telah terkirim. Terima kasih telah menghubungi Flixty!');
-          contactForm.reset();
-        });
-      }
-
-      window.addEventListener('hashchange', function () {
-        var hash = window.location.hash.replace('#', '') || 'home';
-        showPage(hash, false);
-      });
-
-      var initialHash = window.location.hash.replace('#', '') || 'home';
-      showPage(initialHash, false);
-
       var y = document.getElementById('year');
       if (y) y.textContent = new Date().getFullYear();
     })();
