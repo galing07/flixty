@@ -1,0 +1,32 @@
+{
+  "name": "FLIXTY",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.82.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "axios": "^1.7.2",
+    "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "gh": "^2.5.0",
+    "multer": "^2.0.1",
+    "nexusapp-cli": "^1.2.5",
+    "node-cron": "^3.0.3",
+    "pg": "^8.22.0",
+    "sharp": "^0.35.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.2.2"
+  }
+}

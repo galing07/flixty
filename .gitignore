@@ -1,2 +1,18 @@
 .env
 node_modules/
+.vercel
+.env*
+
+# Local secrets and certificates
+.env
+.env.*
+!.env.example
+node_modules/
+.vercel/
+*.pem
+*.key
+*.crt
+*.log
+data/uploads/
+*.backup
+*.backup2
